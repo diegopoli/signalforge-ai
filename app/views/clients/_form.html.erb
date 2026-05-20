@@ -1,0 +1,39 @@
+<%= form_with model: client, class: "space-y-4" do |f| %>
+  <% if client.errors.any? %>
+    <div class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+      <%= client.errors.full_messages.to_sentence %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :full_name, class: "mb-1 block text-sm font-medium" %>
+    <%= f.text_field :full_name, class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <div>
+    <%= f.label :email, class: "mb-1 block text-sm font-medium" %>
+    <%= f.email_field :email, class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <div>
+    <%= f.label :phone, class: "mb-1 block text-sm font-medium" %>
+    <%= f.text_field :phone, class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <div>
+    <%= f.label :risk_profile, class: "mb-1 block text-sm font-medium" %>
+    <%= f.select :risk_profile, ["Conservative", "Balanced", "Growth"], { include_blank: "Select" }, class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <div>
+    <%= f.label :lifecycle_stage, class: "mb-1 block text-sm font-medium" %>
+    <%= f.select :lifecycle_stage, ["active", "prospect", "at_risk"], {}, class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <div>
+    <%= f.label :profile_notes, "Advisor Notes", class: "mb-1 block text-sm font-medium" %>
+    <%= f.text_area :profile_notes, rows: 4, class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+  </div>
+
+  <%= f.submit class: "rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white" %>
+<% end %>

@@ -1,0 +1,70 @@
+<div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+  <div>
+    <h1 class="text-2xl font-semibold"><%= @client.full_name %></h1>
+    <p class="text-sm text-slate-500"><%= @client.email %> • <%= @client.phone.presence || "No phone" %></p>
+  </div>
+  <div class="flex gap-2">
+    <%= link_to "Edit", edit_client_path(@client), class: "rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium" %>
+    <%= button_to "Delete", client_path(@client), method: :delete, class: "rounded-lg bg-red-600 px-3 py-2 text-sm font-medium text-white", data: { turbo_confirm: "Delete this client?" } %>
+  </div>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-2">
+  <section class="rounded-xl border border-slate-200 bg-white p-5">
+    <h2 class="mb-4 text-lg font-semibold">Upload Meeting Note</h2>
+    <%= form_with model: [@client, @note], class: "space-y-3" do |f| %>
+      <%= f.text_field :title, placeholder: "Q2 portfolio review", class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+      <%= f.select :source_type, [["Meeting note", "meeting_note"], ["Transcript", "transcript"]], {}, class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+      <%= f.text_area :raw_content, rows: 7, placeholder: "Paste transcript or advisor notes", class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+      <%= f.submit "Process with AI", class: "rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white" %>
+    <% end %>
+  </section>
+
+  <section class="rounded-xl border border-slate-200 bg-white p-5">
+    <h2 class="mb-4 text-lg font-semibold">Attach Advisor Document</h2>
+    <%= form_with model: [@client, @document], url: client_documents_path(@client), class: "space-y-3" do |f| %>
+      <%= f.text_field :title, placeholder: "Investment Policy Statement", class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+      <%= f.hidden_field :source_type, value: "client_doc" %>
+      <%= f.hidden_field :status, value: "ready" %>
+      <%= f.text_area :content, rows: 7, placeholder: "Paste content for retrieval context", class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+      <%= f.submit "Save and Embed", class: "rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white" %>
+    <% end %>
+  </section>
+</div>
+
+<section class="mt-6 rounded-xl border border-slate-200 bg-white p-5">
+  <h2 class="mb-4 text-lg font-semibold">AI Note Outputs</h2>
+  <div class="space-y-4">
+    <% @notes.each do |note| %>
+      <article class="rounded-lg border border-slate-100 bg-slate-50 p-4">
+        <div class="mb-2 flex items-center justify-between">
+          <p class="font-medium"><%= note.title.presence || "Untitled note" %></p>
+          <span class="rounded-full bg-white px-3 py-1 text-xs"><%= note.processing_status %></span>
+        </div>
+        <p class="mb-2 text-xs text-slate-500"><%= note.created_at.strftime("%b %d, %Y %H:%M") %></p>
+        <p class="mb-2 text-sm"><strong>Summary:</strong> <%= note.summary.presence || "Pending" %></p>
+        <p class="mb-2 text-sm"><strong>Action Items:</strong> <%= note.action_items.presence || "Pending" %></p>
+        <p class="text-sm"><strong>Email Draft:</strong> <%= note.email_draft.presence || "Pending" %></p>
+      </article>
+    <% end %>
+    <% if @notes.empty? %>
+      <p class="text-sm text-slate-500">No notes uploaded yet.</p>
+    <% end %>
+  </div>
+</section>
+
+<section class="mt-6 rounded-xl border border-slate-200 bg-white p-5">
+  <h2 class="mb-4 text-lg font-semibold">Activity Log</h2>
+  <% if @activity_logs.any? %>
+    <ul class="space-y-3">
+      <% @activity_logs.each do |log| %>
+        <li class="rounded-lg border border-slate-100 bg-slate-50 p-3 text-sm">
+          <p class="font-medium"><%= log.log_type.humanize %></p>
+          <p class="text-slate-600"><%= log.content %></p>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-sm text-slate-500">No activity logs yet.</p>
+  <% end %>
+</section>

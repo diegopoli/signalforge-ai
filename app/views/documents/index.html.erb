@@ -1,0 +1,39 @@
+<h1 class="mb-6 text-2xl font-semibold">Documents</h1>
+
+<div class="grid gap-6 lg:grid-cols-2">
+  <section class="rounded-xl border border-slate-200 bg-white p-5">
+    <h2 class="mb-4 text-lg font-semibold">Add Document</h2>
+    <%= form_with model: @document, class: "space-y-3" do |f| %>
+      <% if @document.errors.any? %>
+        <div class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <%= @document.errors.full_messages.to_sentence %>
+        </div>
+      <% end %>
+      <%= f.text_field :title, placeholder: "Retirement planning playbook", class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+      <%= f.collection_select :client_id, @clients, :id, :full_name, { include_blank: "No specific client" }, class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+      <%= f.hidden_field :source_type, value: "advisor_doc" %>
+      <%= f.hidden_field :status, value: "ready" %>
+      <%= f.text_area :content, rows: 8, placeholder: "Paste policy notes, process docs, or strategy content", class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+      <%= f.submit "Save and Embed", class: "rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white" %>
+    <% end %>
+  </section>
+
+  <section class="rounded-xl border border-slate-200 bg-white p-5">
+    <h2 class="mb-4 text-lg font-semibold">Knowledge Base</h2>
+    <div class="space-y-3">
+      <% @documents.each do |document| %>
+        <article class="rounded-lg border border-slate-100 bg-slate-50 p-3">
+          <div class="flex items-center justify-between">
+            <p class="font-medium"><%= document.title %></p>
+            <span class="rounded-full bg-white px-3 py-1 text-xs"><%= document.status %></span>
+          </div>
+          <p class="mt-1 text-xs text-slate-500"><%= document.client&.full_name || "General" %></p>
+          <p class="mt-2 text-sm text-slate-600"><%= truncate(document.content, length: 150) %></p>
+        </article>
+      <% end %>
+      <% if @documents.empty? %>
+        <p class="text-sm text-slate-500">No documents uploaded yet.</p>
+      <% end %>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,17 @@
+<h1 class="mb-6 text-2xl font-semibold">AI Assistant</h1>
+
+<section class="rounded-xl border border-slate-200 bg-white p-5">
+  <%= form_with url: search_ai_assistant_path, method: :post, class: "space-y-3" do |f| %>
+    <%= f.text_area :query, value: @query, rows: 4, placeholder: "Ask: Which clients need follow-up this week based on notes?", class: "w-full rounded-lg border border-slate-300 px-3 py-2" %>
+    <%= f.submit "Ask SignalForge", class: "rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white" %>
+  <% end %>
+</section>
+
+<% if @answer.present? %>
+  <section class="mt-6 rounded-xl border border-slate-200 bg-white p-5">
+    <h2 class="mb-3 text-lg font-semibold">Answer</h2>
+    <div class="prose prose-slate max-w-none text-sm">
+      <%= simple_format(@answer) %>
+    </div>
+  </section>
+<% end %>
