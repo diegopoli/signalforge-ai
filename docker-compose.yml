@@ -30,6 +30,8 @@ services:
       - .env
     environment:
       RAILS_ENV: development
+      HOME: /rails
+      NPM_CONFIG_CACHE: /tmp/.npm
       BUNDLE_PATH: /rails/vendor/bundle
       BUNDLE_APP_CONFIG: /rails/.bundle
       POSTGRES_HOST: db

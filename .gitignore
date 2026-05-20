@@ -39,4 +39,5 @@
 !/app/assets/builds/application.js
 
 /node_modules
+/\.npm
 /vendor/bundle
